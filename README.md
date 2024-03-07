@@ -60,7 +60,7 @@ Contribuições
 Contribuições são bem-vindas! Sinta-se à vontade para sugerir melhorias, reportar problemas ou enviar pull requests.
 
 Autor
-Desenvolvido por [Seu Nome] - [Seu E-mail]
+Desenvolvido por Leonardo Fragoso - leonardorfragoso@gmail.com
 
 Licença
 Este projeto está licenciado sob a Licença MIT.
