@@ -42,7 +42,7 @@ Acesse o diretório do projeto:
 
 bash
 Copy code
-cd seu-repositorio
+cd https://github.com/LeonardoRFragoso/TicketsTI-Flask
 Execute a aplicação:
 
 bash
