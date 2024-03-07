@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="admin-page">
+    >
+    <header>
+        <!-- Seu cabeçalho comum aqui -->
+        <label for="logo" class="logo-label">
+            <img src="{{ url_for('static', filename='images/logorwe.jpg') }}" alt="Logo da RWE">
+        </label>
+    </header>
+
+    <nav>
+        <!-- Sua navegação comum aqui -->
+        <a href="{{ url_for('login') }}">Login</a>
+    </nav>
+
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer>
+        <!-- Seu rodapé comum aqui -->
+        <p>&copy; Todos os direitos reservados. Desenvolvido pelo Gerente do Setor.</p>
+    </footer>
+</body>
+</html>

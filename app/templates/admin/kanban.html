@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets - Kanban</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+    <div class="ticket-board">
+        <div class="ticket-column" id="aguardando" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Aguardando Atendimento</h2>
+            <ul class="ticket-list">
+                {% for ticket in tickets_aguardando %}
+                    <li class="ticket" draggable="true" id="{{ ticket.id }}" ondragstart="drag(event)" ondblclick="showTicketContent('{{ ticket.id }}')">
+                        <h3>{{ ticket.nome }}</h3>
+                        <p>{{ ticket.descricao }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="ticket-column" id="em_andamento" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Em Andamento</h2>
+            <ul class="ticket-list">
+                {% for ticket in tickets_em_andamento %}
+                    <li class="ticket" draggable="true" id="{{ ticket.id }}" ondragstart="drag(event)" ondblclick="showTicketContent('{{ ticket.id }}')">
+                        <h3>{{ ticket.nome }}</h3>
+                        <p>{{ ticket.descricao }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="ticket-column" id="pendente" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Pendente</h2>
+            <ul class="ticket-list">
+                {% for ticket in tickets_pendente %}
+                    <li class="ticket" draggable="true" id="{{ ticket.id }}" ondragstart="drag(event)" ondblclick="showTicketContent('{{ ticket.id }}')">
+                        <h3>{{ ticket.nome }}</h3>
+                        <p>{{ ticket.descricao }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="ticket-column" id="concluido" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Concluído</h2>
+            <ul class="ticket-list">
+                {% for ticket in tickets_concluido %}
+                    <li class="ticket" draggable="true" id="{{ ticket.id }}" ondragstart="drag(event)" ondblclick="showTicketContent('{{ ticket.id }}')">
+                        <h3>{{ ticket.nome }}</h3>
+                        <p>{{ ticket.descricao }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include the separate script.js file -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

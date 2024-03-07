@@ -1,0 +1,112 @@
+/* Estilos para o layout geral da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Alterado para empilhar os elementos verticalmente */
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Contêiner geral para centralizar a logo e o formulário */
+.container {
+    display: flex;
+    flex-direction: column; /* Elementos dentro do contêiner empilhados verticalmente */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos para o formulário e seus elementos */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+    width: 100%;
+    margin-top: 20px; /* Adicionado para criar espaço entre a logo e o formulário */
+}
+
+label,
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border-radius: 16px;
+}
+
+/* Ajustes para input e textarea */
+input,
+textarea {
+    height: 40px;
+}
+
+/* Estilos para os botões nas páginas index, obg e login */
+button,
+a.button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    text-decoration: none; /* Removendo sublinhado nos botões link */
+    display: inline-block;
+}
+
+button:hover,
+a.button:hover {
+    background-color: #2980b9;
+}
+
+/* Estilo específico para o botão "Enviar Ticket" na página index */
+form button[type="submit"] {
+    background-color: #3498db; /* Cor azul mais clara para o botão "Enviar Ticket" */
+}
+
+form button[type="submit"]:hover {
+    background-color: #2980b9; /* Cor azul mais escura ao passar o mouse */
+}
+
+/* Ajustes de layout responsivo */
+@media screen and (max-width: 600px) {
+    form {
+        max-width: none;
+    }
+}
+
+/* Estilos para o logo no formulário */
+label.logo-label img {
+    width: 100%; /* Agora a largura da imagem se ajustará ao contêiner */
+    max-width: 590px; /* Define uma largura máxima para a imagem */
+    border-radius: 20px;
+}
+
+/* Estilos para o logo no formulário */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    /* Adicione outros estilos conforme necessário */
+}
+
+
+/* Estilos específicos para a página de administração */
+body.admin-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.logo-label img {
+    width: 100%;
+    max-width: 590px;
+    border-radius: 20px;
+}
