@@ -37,7 +37,7 @@ Clone o repositório:
 
 bash
 Copy code
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/LeonardoRFragoso/TicketsTI-Flask
 Acesse o diretório do projeto:
 
 bash
