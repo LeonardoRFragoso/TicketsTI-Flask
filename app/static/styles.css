@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column; /* Alterado para empilhar os elementos verticalmente */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
@@ -14,7 +14,7 @@ body {
 /* Contêiner geral para centralizar a logo e o formulário */
 .container {
     display: flex;
-    flex-direction: column; /* Elementos dentro do contêiner empilhados verticalmente */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -27,7 +27,7 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 550px;
     width: 100%;
-    margin-top: 20px; /* Adicionado para criar espaço entre a logo e o formulário */
+    margin-top: 20px;
 }
 
 label,
@@ -56,7 +56,7 @@ a.button {
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    text-decoration: none; /* Removendo sublinhado nos botões link */
+    text-decoration: none;
     display: inline-block;
 }
 
@@ -67,11 +67,11 @@ a.button:hover {
 
 /* Estilo específico para o botão "Enviar Ticket" na página index */
 form button[type="submit"] {
-    background-color: #3498db; /* Cor azul mais clara para o botão "Enviar Ticket" */
+    background-color: #3498db;
 }
 
 form button[type="submit"]:hover {
-    background-color: #2980b9; /* Cor azul mais escura ao passar o mouse */
+    background-color: #2980b9;
 }
 
 /* Ajustes de layout responsivo */
@@ -83,18 +83,18 @@ form button[type="submit"]:hover {
 
 /* Estilos para o logo no formulário */
 label.logo-label img {
-    width: 100%; /* Agora a largura da imagem se ajustará ao contêiner */
-    max-width: 590px; /* Define uma largura máxima para a imagem */
+    width: 100%;
+    max-width: 590px;
     border-radius: 20px;
+    margin-bottom: 20px; /* Aumenta a distância entre a logo e o próximo elemento */
 }
 
-/* Estilos para o logo no formulário */
+/* Estilos para o texto h1 no formulário */
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px; /* Aumenta a distância entre o texto e o próximo elemento */
     /* Adicione outros estilos conforme necessário */
 }
-
 
 /* Estilos específicos para a página de administração */
 body.admin-page {
@@ -105,8 +105,10 @@ body.admin-page {
     min-height: 100vh;
 }
 
+/* Estilos para o logo na página de administração */
 .logo-label img {
     width: 100%;
     max-width: 590px;
     border-radius: 20px;
+    margin-bottom: 20px; /* Aumenta a distância entre a logo e o próximo elemento */
 }
