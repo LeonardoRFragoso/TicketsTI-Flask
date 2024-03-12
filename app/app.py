@@ -20,18 +20,18 @@ app.config['SECRET_KEY'] = '123456'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-
-
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 
+
 class User(db.Model, UserMixin):
-    __tablename__ = 'User' 
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean, default=False)
+
 
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,18 +50,18 @@ class Ticket(db.Model):
     sla = db.Column(db.Interval)
 
     def send_status_update_email(self):
-        email_body = f'O status do seu ticket (ID: {self.id}) agora é {self.status}.'
+        email_body = f'Sua solicitação para a equipe de T.I foi recebida e/ou atualizada e agora seu status é {self.status}. Qualquer informação ou comunicação necessária para resolução deste ticket pode e deve ser feita a partir desta conversa de email.'
         enviar_email([self.email, 'ti@rwetelemedicina.com.br'], 'Atualização de status do ticket', email_body)
 
     def update_status(self, new_status):
         now = func.now()
-        if new_status in ['em_andamento', 'Em andamento', 'em andamento']:
-            if self.status in ['Aguardando atendimento', 'aguardando']:
+        if new_status in ['em_andamento', 'Em andamento', 'em_andamento', 'Em Andamento']:
+            if self.status in ['Aguardando atendimento', 'aguardando', 'Aguardando Atendimento']:
                 self.horario_inicial_atendimento = now
         elif new_status in ['Pendente', 'pendente']:
-            if self.status in ['Em andamento', 'em andamento', 'em_andamento']:
+            if self.status in ['Em andamento', 'em andamento', 'em_andamento', 'Em Andamento']:
                 self.pausa_horario_atendimento = now
-        elif new_status in ['em_andamento', 'Em andamento', 'em andamento']:
+        elif new_status in ['em_andamento', 'Em andamento', 'em_andamento', 'Em Andamento']:
             if self.status in ['Pendente', 'pendente']:
                 if self.horario_retomado_atendimento:
                     self.horario_retomado_atendimento += now - self.pausa_horario_atendimento
@@ -70,7 +70,7 @@ class Ticket(db.Model):
                 self.pausa_horario_atendimento = None
         self.status = new_status
         db.session.commit()
-        if new_status in ['Concluído', 'Finalizado']:
+        if new_status in ['Concluído', 'concluído', 'Concluido', 'concluido']:
             self.calculate_sla()
             db.session.commit()
         self.send_status_update_email()
@@ -90,11 +90,11 @@ class Ticket(db.Model):
     def get_ticket_content(self):
         return f"ID: {self.id}\nNome: {self.nome}\nE-mail: {self.email}\nSetor: {self.setor}\nCategoria: {self.categoria}\nDescrição: {self.descricao}\nPatrimônio: {self.patrimonio}\nStatus: {self.status}\nTeamviewer: {self.teamviewer}\nHorário Inicial do Atendimento: {self.horario_inicial_atendimento}\nPausa Horário do Atendimento: {self.pausa_horario_atendimento}\nSLA Retomado: {self.tempo_retomado_atendimento}\nSLA Total: {self.tempo_total_atendimento}\nTempo Total: {self.tempo_total}"
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.query(User).get(int(user_id)) if user_id is not None else None
 
-admin = Admin(app, template_mode='bootstrap3')
 
 class TicketModelView(ModelView):
     def on_model_change(self, form, model, is_created):
@@ -106,8 +106,9 @@ class TicketModelView(ModelView):
             model.update_status(new_status)
         return super(TicketModelView, self).on_model_change(form, model, is_created)
 
+
 ticket_model_view = TicketModelView(Ticket, db.session, name='Lista de Tickets')
-admin.add_view(ticket_model_view)
+
 
 class AdminModelView(ModelView):
     def is_accessible(self):
@@ -117,10 +118,22 @@ class AdminModelView(ModelView):
         return redirect(url_for('login'))
 
 
+class CustomAdminIndexView(AdminIndexView):
+    def is_visible(self):
+        # Defina a visibilidade da aba "home" conforme necessário
+        return False
+
+
+# Use a classe personalizada ao criar a instância do Admin
+admin = Admin(app, template_mode='bootstrap3', index_view=CustomAdminIndexView())
+admin.add_view(ticket_model_view)
+# admin.add_view(AdminModelView(User, db.session))
+
 @app.before_request
 def check_admin():
     if '/admin' in request.path and not current_user.is_authenticated:
         return redirect(url_for('login'))
+
 
 class ReportModelView(BaseView):
     @expose('/')
@@ -130,27 +143,19 @@ class ReportModelView(BaseView):
     @expose('/generate_report', methods=['POST', 'GET'])
     def generate_report_view(self):
         if request.method == 'POST':
-            start_date = request.form.get('start_date')
-            end_date = request.form.get('end_date')
-            status = request.form.get('status')
-            nome = request.form.get('nome')
-            email = request.form.get('email')
-            setor = request.form.get('setor')
-            patrimonio = request.form.get('patrimonio')
-
-            report_data = self.generate_report(start_date, end_date, status, nome, email, setor, patrimonio)
+            filters = {key: request.form.get(key) for key in request.form}
+            report_data = self.generate_report(**filters)
 
             # Lógica para geração de relatório em formato Excel (xlsx)
             xlsx_data = BytesIO()
-            report_data.to_excel(xlsx_data, index=False, sheet_name='Sheet1')
+            report_data.to_excel(xlsx_data, index=False, sheet_name='Relatório de Tickets')
             xlsx_data.seek(0)
             response = make_response(xlsx_data.getvalue())
-            response.headers["Content-Disposition"] = "attachment; filename=report.xlsx"
+            response.headers["Content-Disposition"] = "attachment; filename=Relatorio_de_tickets.xlsx"
             response.headers["Content-type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             return response
         else:
-            # Se você quiser acessar a página de geração de relatórios diretamente via URL (GET), pode adicionar lógica aqui
-            return self.render('admin/report.html')
+            return self.render('admin/report.html', filters=None)  # Passa os filtros de volta para o template
 
     def generate_report(self, start_date, end_date, status, nome, email, setor, patrimonio):
         try:
@@ -207,13 +212,14 @@ class ReportModelView(BaseView):
             print(f"An error occurred in generate_report: {str(e)}")
             raise
 
+
 # Altere o nome da rota para 'generate_report_view'
 admin.add_view(ReportModelView(name='Relatório', endpoint='report_generate_report_view'))
-
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -224,11 +230,13 @@ def login():
             return redirect(url_for('admin.index' if user.is_admin else 'index'))
     return render_template('login.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -252,12 +260,13 @@ def submit():
     ticket.send_status_update_email()
     return redirect(url_for('obg'))
 
+
 def enviar_email(destinatarios, assunto, corpo_email):
     msg = email.message.Message()
     msg['Subject'] = assunto
-    msg['From'] = 'leonardorfragoso@gmail.com'
+    msg['From'] = 'ti@rwetelemedicina.com.br'
     msg['To'] = ", ".join(destinatarios)
-    password = 'aurtmmbtztvuuhea'
+    password = 'korkffjuyqewkskc'
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(corpo_email)
     try:
@@ -269,9 +278,11 @@ def enviar_email(destinatarios, assunto, corpo_email):
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
 
+
 @app.route('/obg')
 def obg():
     return render_template('obg.html')
+
 
 @app.route('/update_ticket_status', methods=['POST'])
 def update_ticket_status():
@@ -285,6 +296,7 @@ def update_ticket_status():
     else:
         return jsonify({'success': False, 'error': 'Ticket not found'})
 
+
 @app.route('/get_ticket_content', methods=['POST'])
 def get_ticket_content():
     ticket_id = request.form.get('ticket_id')
@@ -294,6 +306,7 @@ def get_ticket_content():
         return jsonify({'success': True, 'content': content})
     else:
         return jsonify({'success': False, 'error': 'Ticket not found'})
+
 
 @app.route('/load_tickets')
 def load_tickets():
@@ -305,6 +318,7 @@ def load_tickets():
         'status': ticket.status
     } for ticket in all_tickets]
     return jsonify({'success': True, 'tickets': tickets_data})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
