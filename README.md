@@ -50,18 +50,8 @@ Execute a aplicação:
 bash
 Copy code
 python app.py
-Acesse a aplicação no navegador:
+Acesse a aplicação no navegador: http://ticket.rwesistemas.com.br:8005/
 
-arduino
-Copy code
-http://127.0.0.1:5000/
-Configuração
-Configuração do E-mail (Opcional):
-Caso queira habilitar notificações por e-mail para os usuários ou administradores, configure as credenciais de e-mail no arquivo config.py.
-Contribuições
-Contribuições são bem-vindas! Sinta-se à vontade para sugerir melhorias, reportar problemas ou enviar pull requests.
-
-Autor
 Desenvolvido por Leonardo Fragoso - leonardorfragoso@gmail.com
 
 Licença
