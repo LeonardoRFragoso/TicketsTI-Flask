@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agradecimento</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <label for="logo" class="logo-label">
+            <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE">
+        </label>
+
+        <div class="agradecimento-container">
+            <br>
+            <h2>Obrigado pelo seu contato!</h2>
+            <br>
+            <p>Sua solicitação foi recebida com sucesso. Em breve, entraremos em contato para ajudá-lo.</p>
+            <br>
+            
+            <!-- Aplicando a classe do botão do styles.css -->
+            <a href="{{ url_for('index') }}" class="button">Voltar à Página Inicial</a>
+        </div>
+    </div>
+</body>
+</html>

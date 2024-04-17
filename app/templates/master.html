@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Flask Admin{% endblock %}</title>
+    <!-- Adicione os arquivos CSS necessários -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <!-- Adicione outros arquivos CSS conforme necessário -->
+    {% block head %}
+        {{ super() }}
+        <!-- Adicione o link para o seu arquivo CSS personalizado -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% endblock %}
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <!-- Insira o cabeçalho aqui -->
+    </header>
+
+    <!-- Menu de navegação -->
+    <nav>
+        <!-- Insira o menu de navegação aqui -->
+    </nav>
+
+    <!-- Conteúdo da página -->
+    <main>
+        {% block body %}
+        <!-- Insira o conteúdo da página aqui -->
+        {% endblock %}
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <!-- Insira o rodapé aqui -->
+    </footer>
+
+    <!-- Adicione os arquivos JavaScript necessários -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- Adicione outros arquivos JavaScript conforme necessário -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

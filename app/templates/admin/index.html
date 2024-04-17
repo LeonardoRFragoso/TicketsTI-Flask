@@ -1,0 +1,24 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+    {{ super() }}
+    
+{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <div class="container text-center">
+        <div class="logo-container">
+            <br>
+            <br>
+            <br>
+            <label for="logo" class="logo-label">
+                <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE">
+            </label>
+        </div>
+        <br>
+        <br>
+        <br>
+        <h1>Bem-vindo à página de administração de Tickets de T.I!</h1>
+    </div>
+{% endblock %}
