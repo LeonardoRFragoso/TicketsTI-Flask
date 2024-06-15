@@ -325,12 +325,5 @@ def load_tickets():
     } for ticket in all_tickets]
     return jsonify({'success': True, 'tickets': tickets_data})
 
-
-#if __name__ == "__main__":
- #   cert_path = '/etc/letsencrypt/live/ticket.rwesistemas.com.br/fullchain.pem'
-  #  key_path = '/etc/letsencrypt/live/ticket.rwesistemas.com.br/privkey.pem'
-    
-   # app.run(debug=True, host='0.0.0.0', port=443, ssl_context=(cert_path, key_path))
-
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8005)

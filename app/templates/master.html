@@ -2,45 +2,51 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Flask Admin{% endblock %}</title>
-    <!-- Adicione os arquivos CSS necessários -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
-    <!-- Adicione outros arquivos CSS conforme necessário -->
-    {% block head %}
-        {{ super() }}
-        <!-- Adicione o link para o seu arquivo CSS personalizado -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    {% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block head %}{% endblock %}
 </head>
 <body>
-    <!-- Cabeçalho -->
-    <header>
-        <!-- Insira o cabeçalho aqui -->
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Sistema de Administração de Tickets</h1>
     </header>
-
-    <!-- Menu de navegação -->
-    <nav>
-        <!-- Insira o menu de navegação aqui -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('report_generate_report_view.index') }}">Relatórios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.index') }}">Administração</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
-
-    <!-- Conteúdo da página -->
-    <main>
-        {% block body %}
-        <!-- Insira o conteúdo da página aqui -->
-        {% endblock %}
+    <main class="container mt-4">
+        {% block body %}{% endblock %}
     </main>
-
-    <!-- Rodapé -->
-    <footer>
-        <!-- Insira o rodapé aqui -->
+    <footer class="bg-light text-center py-3 mt-4">
+        <p>&copy; 2024 Sistema de Administração de Tickets. Todos os direitos reservados.</p>
     </footer>
-
-    <!-- Adicione os arquivos JavaScript necessários -->
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <!-- Adicione outros arquivos JavaScript conforme necessário -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

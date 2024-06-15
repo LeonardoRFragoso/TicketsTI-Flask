@@ -1,15 +1,16 @@
-{% extends 'admin/master.html' %}
+{% extends 'master.html' %}
+
+{% block title %}Página de Relatórios{% endblock %}
 
 {% block head %}
     {{ super() }}
-    
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         function viewReport() {
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
-            var status = $('#status').val();1
+            var status = $('#status').val();
             var nome = $('#nome').val();
             var email = $('#email').val();
             var setor = $('#setor').val();
@@ -23,57 +24,55 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container text-center">
-        <label for="logo" class="logo-label">
-            <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE" class="img-fluid mx-auto d-block">
-        </label>
-        <h1>Página de Relatórios</h1>
+<div class="container text-center">
+    <label for="logo" class="logo-label">
+        <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE" class="img-fluid mx-auto d-block">
+    </label>
+    <h1>Página de Relatórios</h1>
 
-        <form method="post" action="{{ url_for('report_generate_report_view.generate_report_view') }}">
-            <!-- Adicione os campos adicionais no formulário -->
-            <div class="form-group">
-                <label for="start_date">Data de Início:</label>
-                <input type="date" name="start_date" id="start_date" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="end_date">Data de Término:</label>
-                <input type="date" name="end_date" id="end_date" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <input type="text" name="status" id="status" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" name="nome" id="nome" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" name="email" id="email" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="setor">Setor:</label>
-                <input type="text" name="setor" id="setor" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="patrimonio">Patrimônio:</label>
-                <input type="text" name="patrimonio" id="patrimonio" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Baixar Relatório</button>
-        </form>
+    <form method="post" action="{{ url_for('report_generate_report_view.generate_report_view') }}">
+        <div class="form-group">
+            <label for="start_date">Data de Início:</label>
+            <input type="date" name="start_date" id="start_date" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">Data de Término:</label>
+            <input type="date" name="end_date" id="end_date" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <input type="text" name="status" id="status" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="setor">Setor:</label>
+            <input type="text" name="setor" id="setor" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="patrimonio">Patrimônio:</label>
+            <input type="text" name="patrimonio" id="patrimonio" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Baixar Relatório</button>
+    </form>
 
-        {% if filters %}
-            <div class="alert alert-info mt-3" role="alert">
-                <strong>Filtros Aplicados:</strong>
-                {% for key, value in filters.items() %}
-                    {% if value %}
-                        <span class="badge badge-secondary">{{ key }}: {{ value }}</span>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endif %}
+    {% if filters %}
+        <div class="alert alert-info mt-3" role="alert">
+            <strong>Filtros Aplicados:</strong>
+            {% for key, value in filters.items() %}
+                {% if value %}
+                    <span class="badge badge-secondary">{{ key }}: {{ value }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
 
-        <!-- Div para exibir os tickets -->
-        <div id="tickets-container"></div>
-    </div>
+    <div id="tickets-container"></div>
+</div>
 {% endblock %}

@@ -1,24 +1,19 @@
-{% extends 'admin/master.html' %}
+{% extends 'master.html' %}
+
+{% block title %}Administração de Tickets{% endblock %}
 
 {% block head %}
     {{ super() }}
-    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 {% endblock %}
 
 {% block body %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <div class="container text-center">
-        <div class="logo-container">
-            <br>
-            <br>
-            <br>
-            <label for="logo" class="logo-label">
-                <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE">
-            </label>
-        </div>
-        <br>
-        <br>
-        <br>
-        <h1>Bem-vindo à página de administração de Tickets de T.I!</h1>
+<div class="container text-center">
+    <div class="logo-container">
+        <label for="logo" class="logo-label">
+            <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE">
+        </label>
     </div>
+    <h1>Bem-vindo à página de administração de Tickets de T.I!</h1>
+</div>
 {% endblock %}

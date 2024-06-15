@@ -7,6 +7,16 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- Navbar -->
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('report_generate_report_view.index') }}">Relatórios</a></li>
+            <li><a href="{{ url_for('admin.index') }}">Administração</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+        </ul>
+    </nav>
+    
     <div class="container">
         <label for="logo" class="logo-label">
             <img src="{{ url_for('static', filename='images/rweLogo.svg') }}" alt="Logo da RWE">
@@ -53,27 +63,18 @@
                 <label for="categoria">Categoria do Ticket:</label>
             </div>
             <div class="user-box">
-                <textarea id="descricao" name="descricao" rows="4" required></textarea>
+                <textarea id="descricao" name="descricao" required></textarea>
                 <label for="descricao">Descrição do Problema:</label>
             </div>
             <div class="user-box">
-                <input type="patrimonio" id="patrimonio" name="patrimonio" required>
+                <input type="text" id="patrimonio" name="patrimonio" required>
                 <label for="patrimonio">Patrimônio</label>
             </div>
-
-            <button type="submit" class="button">Enviar Ticket</button>
+            <button type="submit" class="button">ENVIAR TICKET</button>
         </form>
     </div>
-
-    <!-- Use o bloco with para exibir mensagens flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <footer>
+        <p>© 2024 Sistema de Administração de Tickets. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
