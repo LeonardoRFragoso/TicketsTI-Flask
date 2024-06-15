@@ -1,6 +1,3 @@
-http://ticket.rwesistemas.com.br:8005/
-
-
 O Sistema de Ticket de T.I. é uma aplicação web desenvolvida para facilitar a gestão de solicitações de suporte técnico na área de Tecnologia da Informação. Através do sistema, os usuários podem enviar tickets para relatar problemas, fazer solicitações ou buscar assistência técnica.
 
 Funcionalidades
