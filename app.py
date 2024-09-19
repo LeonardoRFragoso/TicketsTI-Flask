@@ -156,7 +156,7 @@ if escolha == "Enviar Ticket":
         submit_button = st.form_submit_button(label="Enviar Ticket")
 
     if submit_button:
-        if not nome or not email or not setor ou not categoria or not descricao ou not patrimonio:
+        if not nome or not email or not setor or not categoria or not descricao or not patrimonio:
             st.error("Por favor, preencha todos os campos corretamente.")
         else:
             enviar_ticket(nome, email, setor, categoria, descricao, patrimonio)

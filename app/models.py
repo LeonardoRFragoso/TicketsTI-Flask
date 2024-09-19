@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)  # Adiciona o campo email
+    email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
@@ -59,7 +59,6 @@ class Tickets(db.Model):
         Qualquer informação adicional será comunicada via este e-mail.
         """
         try:
-            # Enviando o e-mail para o solicitante e a equipe de TI
             enviar_email([self.email, 'ti@empresa.com'], 'Atualização de Status do Ticket', email_body)
         except Exception as e:
             # Tratar o erro de envio de e-mail
@@ -103,6 +102,7 @@ class Tickets(db.Model):
             total_atendimento -= self.horario_retomado_atendimento - self.pausa_horario_atendimento
         self.sla = total_atendimento
 
+        # Converter SLA para um formato legível
         i18n.activate("pt_BR")
         sla_legivel = humanize.naturaldelta(total_atendimento)
         self.sla_legivel = sla_legivel

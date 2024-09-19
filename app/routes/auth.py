@@ -66,8 +66,8 @@ def logout():
     """
     # Faz o logout do usuário autenticado
     logout_user()
-    
-    logging.info(f"Usuário {current_user.username} fez logout com sucesso.")
+
+    logging.info(f"Usuário fez logout com sucesso.")
     
     # Retorna uma resposta JSON indicando que o logout foi bem-sucedido
     return jsonify({'success': True, 'message': 'Logout realizado com sucesso.'})

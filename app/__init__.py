@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint  # Certifique-se de importar Blueprint aqui
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -25,25 +25,21 @@ def create_app():
     # Inicializa as migrações do banco de dados
     migrate = Migrate(app, db)
 
-    # Registra os blueprints
-    try:
-        register_blueprints(app)
-    except Exception as e:
-        app.logger.error(f"Erro ao registrar blueprints: {e}")
-    
-    return app
-
-# Função que registra os blueprints na aplicação principal
-def register_blueprints(app):
-    """
-    Função para registrar todos os blueprints da aplicação.
-    """
+    # Registrando os blueprints
     from app.routes.auth import auth_bp
     from app.routes.admin import admin_bp
     from app.routes.report import report_bp
-    from app.routes.ticket import ticket_bp  # Certifique-se que este import está correto
-
+    from app.routes.ticket import ticket_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(report_bp)
-    app.register_blueprint(ticket_bp)  # Certifique-se que este blueprint está registrado
+    app.register_blueprint(ticket_bp)
+
+    # Adiciona o user_loader ao LoginManager
+    from app.models import User  # Agora podemos importar User sem causar ciclo de dependência
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))  # Carrega o usuário a partir do ID
+
+    return app
