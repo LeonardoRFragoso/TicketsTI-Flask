@@ -41,9 +41,6 @@ def mostrar_tickets_em_colunas(tickets):
         border-radius: 10px;
         border: 2px dashed #444;
     }
-    .empty-column {
-        display: none;
-    }
     </style>
     <script>
     function allowDrop(ev) {
@@ -97,8 +94,8 @@ def mostrar_tickets_em_colunas(tickets):
     # Coluna Aguardando Atendimento
     with col1:
         st.markdown("<div class='column-header'>Aguardando Atendimento</div>", unsafe_allow_html=True)
+        st.markdown("<div id='Aguardando atendimento' class='ticket-column' ondrop='drop(event, \"Aguardando atendimento\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
         if tickets_aguardando:
-            st.markdown("<div id='Aguardando atendimento' class='ticket-column' ondrop='drop(event, \"Aguardando atendimento\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
             for ticket in tickets_aguardando:
                 st.markdown(f"""
                 <div id="ticket_{ticket['id']}" class='card' draggable='true' ondragstart='drag(event)' data-status='Aguardando atendimento'>
@@ -111,15 +108,15 @@ def mostrar_tickets_em_colunas(tickets):
                     <p><b>Data de Criação:</b> {ticket['data_criacao']}</p>
                 </div>
                 """, unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='empty-column'></div>", unsafe_allow_html=True)
+            st.markdown("<p style='color: white;'>Nenhum ticket nesta coluna</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Coluna Em Andamento
     with col2:
         st.markdown("<div class='column-header'>Em Andamento</div>", unsafe_allow_html=True)
+        st.markdown("<div id='Em andamento' class='ticket-column' ondrop='drop(event, \"Em andamento\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
         if tickets_andamento:
-            st.markdown("<div id='Em andamento' class='ticket-column' ondrop='drop(event, \"Em andamento\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
             for ticket in tickets_andamento:
                 st.markdown(f"""
                 <div id="ticket_{ticket['id']}" class='card' draggable='true' ondragstart='drag(event)' data-status='Em andamento'>
@@ -132,15 +129,15 @@ def mostrar_tickets_em_colunas(tickets):
                     <p><b>Data de Criação:</b> {ticket['data_criacao']}</p>
                 </div>
                 """, unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='empty-column'></div>", unsafe_allow_html=True)
+            st.markdown("<p style='color: white;'>Nenhum ticket nesta coluna</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Coluna Pendente
     with col3:
         st.markdown("<div class='column-header'>Pendente</div>", unsafe_allow_html=True)
+        st.markdown("<div id='Pendente' class='ticket-column' ondrop='drop(event, \"Pendente\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
         if tickets_pendente:
-            st.markdown("<div id='Pendente' class='ticket-column' ondrop='drop(event, \"Pendente\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
             for ticket in tickets_pendente:
                 st.markdown(f"""
                 <div id="ticket_{ticket['id']}" class='card' draggable='true' ondragstart='drag(event)' data-status='Pendente'>
@@ -153,15 +150,15 @@ def mostrar_tickets_em_colunas(tickets):
                     <p><b>Data de Criação:</b> {ticket['data_criacao']}</p>
                 </div>
                 """, unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='empty-column'></div>", unsafe_allow_html=True)
+            st.markdown("<p style='color: white;'>Nenhum ticket nesta coluna</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Coluna Concluído
     with col4:
         st.markdown("<div class='column-header'>Concluído</div>", unsafe_allow_html=True)
+        st.markdown("<div id='Concluído' class='ticket-column' ondrop='drop(event, \"Concluído\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
         if tickets_concluido:
-            st.markdown("<div id='Concluído' class='ticket-column' ondrop='drop(event, \"Concluído\")' ondragover='allowDrop(event)'>", unsafe_allow_html=True)
             for ticket in tickets_concluido:
                 st.markdown(f"""
                 <div id="ticket_{ticket['id']}" class='card' draggable='true' ondragstart='drag(event)' data-status='Concluído'>
@@ -174,6 +171,6 @@ def mostrar_tickets_em_colunas(tickets):
                     <p><b>Data de Criação:</b> {ticket['data_criacao']}</p>
                 </div>
                 """, unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='empty-column'></div>", unsafe_allow_html=True)
+            st.markdown("<p style='color: white;'>Nenhum ticket nesta coluna</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
