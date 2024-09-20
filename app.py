@@ -18,7 +18,7 @@ else:
 # Exibe a tela apropriada com base no menu selecionado
 if menu == "Enviar Ticket":
     tela_enviar_ticket()
-elif menu == "Login":
+elif menu == "Login" and not st.session_state.logged_in:
     tela_login()
 elif menu == "Listar Tickets" and st.session_state.logged_in:
     tela_listar_tickets()
@@ -27,4 +27,5 @@ elif menu == "Gerar Relatório" and st.session_state.logged_in:
 elif menu == "Logout" and st.session_state.logged_in:
     tela_logout()
 else:
-    st.warning("Você precisa estar logado para acessar essa seção.")
+    if not st.session_state.logged_in:
+        st.warning("Você precisa estar logado para acessar essa seção.")

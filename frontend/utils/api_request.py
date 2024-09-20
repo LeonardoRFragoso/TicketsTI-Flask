@@ -27,7 +27,9 @@ def enviar_ticket(nome, email, setor, categoria, descricao, patrimonio):
 # Função para listar os tickets do backend
 def listar_tickets():
     try:
-        response = requests.get(f"{BASE_URL}/tickets")
+        # Verifica se há cookie de sessão armazenado
+        cookies = {'session': st.session_state.get('session_cookie')}
+        response = requests.get(f"{BASE_URL}/tickets", cookies=cookies)
         if response.status_code == 200:
             return response.json().get("tickets", [])
         else:
@@ -44,8 +46,8 @@ def login_user(username, password):
         if response.status_code == 200:
             result = response.json()
             if result.get('success'):
-                st.session_state.logged_in = True
-                st.session_state.session_cookie = response.cookies.get('session')
+                st.session_state['logged_in'] = True
+                st.session_state['session_cookie'] = response.cookies.get('session')
                 st.success("Login realizado com sucesso!")
                 return True
             else:
@@ -61,9 +63,11 @@ def login_user(username, password):
 # Função para fazer logout
 def logout_user():
     try:
-        response = requests.post(f"{BASE_URL}/logout")
+        cookies = {'session': st.session_state.get('session_cookie')}
+        response = requests.post(f"{BASE_URL}/logout", cookies=cookies)
         if response.status_code == 200:
-            st.session_state.logged_in = False
+            st.session_state['logged_in'] = False
+            st.session_state['session_cookie'] = None
             st.success("Logout realizado com sucesso!")
         else:
             st.error(f"Erro ao realizar logout. Código de resposta: {response.status_code}")
@@ -83,7 +87,8 @@ def gerar_relatorio(start_date, end_date, status, nome, email, setor, patrimonio
     }
 
     try:
-        response = requests.post(f"{BASE_URL}/generate_report", json=filters)
+        cookies = {'session': st.session_state.get('session_cookie')}
+        response = requests.post(f"{BASE_URL}/generate_report", json=filters, cookies=cookies)
         if response.status_code == 200:
             output = BytesIO(response.content)
             st.download_button(
@@ -101,7 +106,8 @@ def gerar_relatorio(start_date, end_date, status, nome, email, setor, patrimonio
 # Função para atualizar o status do ticket
 def atualizar_status(ticket_id, novo_status):
     try:
-        response = requests.put(f"{BASE_URL}/update_status/{ticket_id}", json={'status': novo_status})
+        cookies = {'session': st.session_state.get('session_cookie')}
+        response = requests.put(f"{BASE_URL}/update_status/{ticket_id}", json={'status': novo_status}, cookies=cookies)
         if response.status_code == 200:
             st.success(f"Status do ticket {ticket_id} atualizado para '{novo_status}'!")
         else:
