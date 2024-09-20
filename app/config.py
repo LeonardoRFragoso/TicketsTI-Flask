@@ -30,9 +30,15 @@ class Config:
     ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@empresa.com')
 
     # Configurações de segurança adicionais
-    SESSION_COOKIE_SECURE = True  # Garante que os cookies de sessão sejam enviados apenas por HTTPS
-    REMEMBER_COOKIE_SECURE = True  # Garante que o cookie "lembrar" seja enviado apenas por HTTPS
-    REMEMBER_COOKIE_HTTPONLY = True  # Impede que JavaScript acesse o cookie "lembrar"
+    SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() in ['true', '1', 't']
+    REMEMBER_COOKIE_SECURE = os.getenv('REMEMBER_COOKIE_SECURE', 'False').lower() in ['true', '1', 't']
+    REMEMBER_COOKIE_HTTPONLY = os.getenv('REMEMBER_COOKIE_HTTPONLY', 'True').lower() in ['true', '1', 't']
 
-    # Desativar o CSRF globalmente, se necessário (para simplificar o desenvolvimento)
-    WTF_CSRF_ENABLED = False  # Desativa a proteção CSRF globalmente (utilize com cuidado em produção)
+    # Definição da página de login
+    LOGIN_VIEW = 'auth.login'  # Definindo a view para redirecionamento de login
+    
+    # Configuração para lembrar sessão do usuário
+    REMEMBER_COOKIE_DURATION = int(os.getenv('REMEMBER_COOKIE_DURATION', 3600))  # 1 hora de duração padrão
+
+    # Desativar o CSRF globalmente para simplificar em desenvolvimento
+    WTF_CSRF_ENABLED = os.getenv('WTF_CSRF_ENABLED', 'False').lower() in ['true', '1', 't']

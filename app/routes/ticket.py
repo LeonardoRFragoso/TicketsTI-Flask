@@ -1,11 +1,14 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required
 from app.models import Tickets
 from app import db
 from datetime import datetime
+import logging
 
 # Criação do blueprint para lidar com tickets
 ticket_bp = Blueprint('ticket', __name__)
+
+# Configuração de logs para monitorar as ações
+logging.basicConfig(level=logging.INFO)
 
 @ticket_bp.route('/submit', methods=['POST'])
 def submit_ticket():
@@ -14,10 +17,12 @@ def submit_ticket():
     Recebe uma requisição POST com os dados do ticket em formato JSON.
     """
     try:
-        # Recebe os dados enviados no corpo da requisição (em formato JSON)
         data = request.get_json()
 
-        # Extrai os dados do JSON
+        if not data:
+            logging.error("Nenhum dado foi enviado na solicitação.")
+            return jsonify({"success": False, "message": "Nenhum dado foi enviado."}), 400
+
         nome = data.get('nome')
         email = data.get('email')
         setor = data.get('setor')
@@ -26,7 +31,8 @@ def submit_ticket():
         patrimonio = data.get('patrimonio')
 
         # Verifica se todos os campos obrigatórios foram fornecidos
-        if not nome or not email or not setor or not categoria or not descricao or not patrimonio:
+        if not all([nome, email, setor, categoria, descricao, patrimonio]):
+            logging.error("Campos obrigatórios não foram preenchidos corretamente.")
             return jsonify({"success": False, "message": "Todos os campos são obrigatórios."}), 400
 
         # Cria um novo ticket no banco de dados
@@ -45,27 +51,25 @@ def submit_ticket():
         db.session.add(novo_ticket)
         db.session.commit()
 
-        # Retorna uma resposta de sucesso
+        logging.info(f"Novo ticket criado por {nome} (ID: {novo_ticket.id})")
+
         return jsonify({"success": True, "message": "Ticket enviado com sucesso!"}), 200
 
     except Exception as e:
-        # Retorna uma resposta de erro em caso de falha
+        logging.error(f"Erro ao enviar ticket: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
+
 @ticket_bp.route('/tickets', methods=['GET'])
-@login_required
 def listar_tickets():
     """
     Rota para listar todos os tickets do sistema.
     Retorna os tickets no formato JSON.
-    Acesso restrito a usuários autenticados.
     """
     try:
-        # Obtém todos os tickets do banco de dados
         tickets = Tickets.query.all()
-
-        # Formata os tickets para JSON
         tickets_json = []
+
         for ticket in tickets:
             tickets_json.append({
                 'id': ticket.id,
@@ -81,7 +85,52 @@ def listar_tickets():
                 'horario_final_atendimento': ticket.horario_final_atendimento.strftime('%Y-%m-%d %H:%M:%S') if ticket.horario_final_atendimento else None
             })
 
+        logging.info(f"{len(tickets_json)} tickets listados.")
         return jsonify({"success": True, "tickets": tickets_json}), 200
 
     except Exception as e:
+        logging.error(f"Erro ao listar tickets: {str(e)}")
         return jsonify({"success": False, "message": str(e)}), 500
+
+
+@ticket_bp.route('/update_status/<int:ticket_id>', methods=['PUT'])
+def update_status(ticket_id):
+    """
+    Rota para atualizar o status de um ticket.
+    Recebe o ID do ticket e o novo status via PUT request.
+    """
+    try:
+        data = request.get_json()
+        new_status = data.get('status')
+
+        if not new_status:
+            logging.error("Nenhum status fornecido para o ticket.")
+            return jsonify({"success": False, "message": "Nenhum status fornecido."}), 400
+
+        # Verifica se o ticket existe
+        ticket = Tickets.query.get(ticket_id)
+        if not ticket:
+            logging.error(f"Ticket com ID {ticket_id} não encontrado.")
+            return jsonify({"success": False, "message": "Ticket não encontrado."}), 404
+
+        # Verifica se o status é válido
+        valid_status = ['Aguardando atendimento', 'Em andamento', 'Concluído', 'Pendente']
+        if new_status not in valid_status:
+            logging.error(f"Status '{new_status}' inválido.")
+            return jsonify({"success": False, "message": "Status inválido."}), 400
+
+        # Atualiza o status e os horários conforme necessário
+        ticket.status = new_status
+        if new_status == 'Em andamento' and not ticket.horario_inicial_atendimento:
+            ticket.horario_inicial_atendimento = datetime.utcnow()
+        elif new_status == 'Concluído' and not ticket.horario_final_atendimento:
+            ticket.horario_final_atendimento = datetime.utcnow()
+
+        db.session.commit()
+
+        logging.info(f"Status do ticket {ticket_id} atualizado para '{new_status}'")
+        return jsonify({"success": True, "message": "Status atualizado com sucesso!"}), 200
+
+    except Exception as e:
+        logging.error(f"Erro ao atualizar status do ticket {ticket_id}: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500

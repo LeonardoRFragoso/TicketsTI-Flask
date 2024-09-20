@@ -21,6 +21,8 @@ def create_app():
     
     # Configuração da página de login
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = "Você precisa estar logado para acessar esta página."
+    login_manager.login_message_category = "info"
 
     # Inicializa as migrações do banco de dados
     migrate = Migrate(app, db)

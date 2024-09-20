@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect, url_for, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
 from app.forms import LoginForm
@@ -11,52 +11,58 @@ csrf = CSRFProtect()
 # Criação do blueprint de autenticação
 auth_bp = Blueprint('auth', __name__)
 
-# Certifique-se de que o CSRF está corretamente desativado para a rota de login
+# Configuração de logs para monitoramento
+logging.basicConfig(level=logging.INFO)
+
 @csrf.exempt
 @auth_bp.route('/login', methods=['POST'])
 def login():
     """
-    Rota para autenticação de usuários.
-    Recebe uma requisição POST com dados em formato JSON.
-    Se o login for bem-sucedido, o usuário será autenticado e uma resposta JSON será retornada.
+    Rota de login para usuários. Recebe dados de login (username e password) via POST
+    e autentica o usuário se as credenciais forem válidas.
     """
-    data = request.get_json()  # Recebe os dados JSON do Streamlit
+    data = request.get_json()
 
     if not data:
-        logging.error('Nenhum dado foi enviado.')
+        logging.error('Nenhum dado foi enviado na solicitação.')
         return jsonify({'success': False, 'message': 'Nenhum dado foi enviado.'}), 400
     
-    logging.info(f"Dados recebidos para login: {data}")  # Log dos dados recebidos
-    
-    # Criação manual de um formulário para validação de dados
     form = LoginForm(data=data)
 
-    # Verifica se o formulário é válido
+    # Valida o formulário de login
     if form.validate():
-        # Busca o usuário no banco de dados com base no nome de usuário
         user = User.query.filter_by(username=form.username.data).first()
-        
-        if user:
-            logging.info(f"Usuário encontrado: {user.username}")
-        
-        # Verifica se o usuário existe e se a senha é válida
+
         if user and user.verify_password(form.password.data):
-            # Faz o login do usuário
             login_user(user)
             logging.info(f"Usuário {user.username} logado com sucesso.")
             
-            # Retorna uma resposta JSON indicando sucesso
-            return jsonify({'success': True, 'is_admin': user.is_admin})
+            # Cria a resposta com sucesso no login e redirecionamento
+            response = make_response(jsonify({
+                'success': True,
+                'is_admin': user.is_admin,
+                'redirect': url_for('ticket.listar_tickets'),
+                'message': 'Login realizado com sucesso!'
+            }))
+            
+            # Inclui o cookie de sessão
+            session_cookie = request.cookies.get('session')
+            if session_cookie:
+                response.set_cookie('session', session_cookie, httponly=True)
+                logging.info(f"Cookie de sessão definido com sucesso para o usuário {user.username}.")
+            else:
+                logging.warning("Nenhum cookie de sessão foi encontrado para definir.")
+            
+            return response
         else:
-            # Mensagem de erro caso as credenciais estejam incorretas
-            logging.warning(f"Usuário ou senha inválidos para o usuário: {form.username.data}")
+            logging.warning(f"Falha no login: usuário ou senha inválidos para o usuário: {form.username.data}")
             return jsonify({'success': False, 'message': 'Usuário ou senha inválidos.'}), 401
     else:
-        # Se o formulário não for válido, exibe os erros de validação
-        logging.error(f"Erros de validação: {form.errors}")
+        logging.error(f"Erros de validação no formulário: {form.errors}")
         return jsonify({'success': False, 'message': 'Dados inválidos.', 'errors': form.errors}), 400
 
-@csrf.exempt  # Certifique-se de desativar o CSRF também para logout
+
+@csrf.exempt
 @auth_bp.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -65,9 +71,23 @@ def logout():
     Recebe uma requisição POST e, ao realizar o logout, retorna uma resposta JSON indicando sucesso.
     """
     # Faz o logout do usuário autenticado
+    username = current_user.username if current_user.is_authenticated else 'Desconhecido'
     logout_user()
-
-    logging.info(f"Usuário fez logout com sucesso.")
+    logging.info(f"Usuário {username} fez logout com sucesso.")
     
-    # Retorna uma resposta JSON indicando que o logout foi bem-sucedido
-    return jsonify({'success': True, 'message': 'Logout realizado com sucesso.'})
+    # Cria a resposta indicando que o logout foi bem-sucedido
+    response = jsonify({'success': True, 'message': 'Logout realizado com sucesso.'})
+    # Remove o cookie de sessão
+    response.delete_cookie('session')
+    
+    return response
+
+
+@csrf.exempt
+@auth_bp.route('/login', methods=['GET'])
+def login_get():
+    """
+    Rota para redirecionar requisições GET para a página correta em caso de redirecionamento automático.
+    """
+    logging.info("Tentativa de login usando GET, mas a rota aceita apenas POST.")
+    return jsonify({"message": "Utilize uma requisição POST para fazer login."}), 405
